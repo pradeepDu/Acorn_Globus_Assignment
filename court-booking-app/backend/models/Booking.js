@@ -58,6 +58,10 @@ const bookingSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  phone: {
+    type: String,
+    trim: true
+  },
   notes: {
     type: String,
     trim: true
@@ -78,12 +82,11 @@ bookingSchema.index({ coach: 1, startTime: 1, endTime: 1, status: 1 });
 bookingSchema.index({ user: 1, createdAt: -1 });
 
 // Optimistic locking
-bookingSchema.pre('save', function(next) {
+bookingSchema.pre('save', function() {
   this.updatedAt = Date.now();
   if (!this.isNew) {
     this.increment();
   }
-  next();
 });
 
 module.exports = mongoose.model('Booking', bookingSchema);

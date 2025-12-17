@@ -42,12 +42,11 @@ const userSchema = new mongoose.Schema({
 });
 
 // Hash OTP before saving
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function() {
   if (!this.isModified('otp') || !this.otp) {
-    return next();
+    return;
   }
   this.otp = await bcrypt.hash(this.otp, 10);
-  next();
 });
 
 // Method to compare OTP
