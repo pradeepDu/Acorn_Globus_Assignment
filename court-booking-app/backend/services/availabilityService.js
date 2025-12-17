@@ -164,6 +164,14 @@ const getAvailableSlots = async (courtId, date, userId = null) => {
     startTime: { $gte: startOfDay, $lte: endOfDay }
   }).sort({ startTime: 1 });
 
+  // Debug: Log all bookings found (dev mode only)
+  if (process.env.NODE_ENV === 'development' && bookings.length > 0) {
+    console.log(`[Availability] Found ${bookings.length} bookings for court ${courtId}:`);
+    bookings.forEach(b => {
+      console.log(`  - User: ${b.user}, Start: ${b.startTime}, End: ${b.endTime}, Status: ${b.status}`);
+    });
+  }
+
   // Get all active reservations for this court on this date
   const reservations = await Reservation.find({
     court: courtId,
@@ -211,11 +219,11 @@ const getAvailableSlots = async (courtId, date, userId = null) => {
     // Ensure both IDs are strings for comparison
     const bookingUserId = booking ? booking.user.toString() : null;
     const currentUserId = userId ? userId.toString() : null;
-    const isBookedByMe = booking && currentUserId && bookingUserId === currentUserId;
+    const isBookedByMe = isBooked && currentUserId && bookingUserId === currentUserId;
     
-    // Debug logging for first slot only
-    if (hour === startHour && userId) {
-      console.log('[Slot Check] userId:', currentUserId, 'bookingUserId:', bookingUserId, 'isBookedByMe:', isBookedByMe);
+    // Debug logging for booked slots only (dev mode only)
+    if (process.env.NODE_ENV === 'development' && isBooked && userId) {
+      console.log(`[Slot Check ${hour}:00] userId: ${currentUserId}, bookingUserId: ${bookingUserId}, isBookedByMe: ${isBookedByMe}`);
     }
 
     // Check if this slot is reserved by another user
