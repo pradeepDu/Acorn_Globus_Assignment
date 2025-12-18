@@ -202,8 +202,7 @@ Run `npm run seed` in backend directory to populate database with:
 
 - **2 Users**: 
   - **Super Admin**: `your-email-in-env` (full system access)
-  - **Demo User**: `demo@courtbooking.com or a valid email for getting actual OTP for reservations` (regular user)
-  - Both use OTP `123456` in dev mode
+  - use OTP `123456` in dev mode
 
 ## API Documentation
 
