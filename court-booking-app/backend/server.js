@@ -10,7 +10,14 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    process.env.CLIENT_URL || 'http://localhost:5173',
+    ...(process.env.NODE_ENV === 'production' ? [
+      /\.vercel\.app$/,  // Allow all Vercel preview and production deployments
+    ] : [])
+  ],
   credentials: true
 }));
 app.use(express.json());

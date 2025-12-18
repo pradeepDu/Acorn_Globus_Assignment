@@ -8,7 +8,8 @@ A full-stack court booking system for sports facilities with multi-resource book
 - **Multi-Resource Booking**: Book court + equipment + coach in a single atomic transaction
 - **Soft-Lock Reservation System**: Temporary slot reservation (5 min) when user starts booking to prevent conflicts
 - **Smart Slot Management**: Automatic prevention of past time slot bookings
-- **Dynamic Pricing Engine**: Configurable pricing rules (peak hours, weekends, court type)
+- **Dynamic Pricing Engine**: 7 pricing rule types (time-based, day-based, court-type, seasonal, festival, specific-date, custom) with priority-based evaluation and admin configurability
+- **Festival & Special Date Pricing**: Apply special offers during festivals (Christmas, Diwali, New Year) or specific dates (Grand Opening Day, Anniversaries)
 - **Multi-Hour Booking Support**: Book consecutive hours with per-hour dynamic pricing
 
 ### Waitlist & Queue Management
@@ -29,11 +30,14 @@ A full-stack court booking system for sports facilities with multi-resource book
 - **Phone Verification**: Contact verification for bookings and waitlist
 
 ### Admin Features
-- **Comprehensive Dashboard**: Manage courts, equipment, coaches, pricing rules
+- **Comprehensive Dashboard**: Modular admin panel with 6 tabs (Courts, Equipment, Coaches, Pricing Rules, Bookings, Users)
 - **Court Maintenance Mode**: Freeze courts for maintenance (no bookings allowed)
+- **Equipment Management**: CRUD operations with type classification (racket, net, ball) and quantity tracking
+- **Coach Management**: Full profile management with phone, email, specialization, and hourly rates
+- **Advanced Pricing Rules**: Create 7 types of pricing rules including festival offers and specific-date promotions
 - **Bookings Management**: View all bookings and waitlist with pagination (10 items/page)
 - **User Management**: View registered users with booking counts and pagination
-- **CRUD Operations**: Full create, read, update, delete for all resources
+- **CRUD Operations**: Full create, read, update, delete, toggle active/inactive for all resources
 
 ## Tech Stack
 
@@ -51,6 +55,7 @@ A full-stack court booking system for sports facilities with multi-resource book
 - React Router
 - Axios
 - TanStack Query (React Query)
+- **Modular Component Architecture**: Feature-based organization with reusable, composable components
 
 ## Prerequisites
 
@@ -98,6 +103,7 @@ EMAIL_FROM=Court Booking <noreply@courtbooking.com>
 
 OTP_EXPIRE_MINUTES=10
 CLIENT_URL=http://localhost:5173
+SUPER_ADMIN_EMAIL=your-email
 ```
 
 #### Setting up Gmail for SMTP:
@@ -154,28 +160,31 @@ Frontend will run on `http://localhost:5173`
 Run `npm run seed` in backend directory to populate database with:
 
 - **4 Courts**: 
-  - 2 Indoor (₹500/hr)
-  - 2 Outdoor (₹300/hr)
+  - Indoor Clay Court (₹800/hr)
+  - Outdoor Grass Court (₹600/hr)
+  - Indoor Synthetic Court (₹1000/hr)
+  - Outdoor Hard Court (₹500/hr)
   - All set to active status (bookable)
 
-- **5 Equipment Items**: 
-  - Professional Rackets (10 available, ₹50/hr)
-  - Sports Shoes (15 available, ₹30/hr)
-  - Shuttlecocks (50 available, ₹10/hr)
-  - Water Bottles (20 available, ₹5/hr)
-  - Court Markers (8 available, ₹15/hr)
+- **8 Equipment Items**: 
+  - Premium Racket (5 qty, ₹100/hr), Standard Racket (10 qty, ₹50/hr), Junior Racket (8 qty, ₹30/hr)
+  - Net (4 qty, ₹50/hr), Professional Net (3 qty, ₹75/hr), Training Net (5 qty, ₹40/hr)
+  - Practice Balls (20 qty, ₹20/hr), Ball (15 qty, ₹15/hr)
+  - Types: racket, net, ball
 
-- **3 Coaches**: 
-  - Various specialties (Singles, Doubles, Beginners)
-  - Rates: ₹800-1200/hr
-  - All available and active
+- **4 Coaches**: 
+  - Alex Johnson (Singles Specialist, ₹1500/hr), Maria Garcia (Doubles Expert, ₹1200/hr)
+  - Ravi Kumar (Beginner Friendly, ₹1000/hr), Sophie Chen (Advanced Training, ₹1800/hr)
+  - Each with name, email, phone, specialization, hourly rates, and availability
 
-- **5 Pricing Rules**: 
-  - Peak Hours (6 PM - 9 PM): 1.5x multiplier
-  - Weekend Surge: 1.3x multiplier
-  - Early Bird (6 AM - 9 AM): 0.9x discount
-  - Premium Court: 1.2x for indoor courts
-  - Holiday Rate: 1.4x (configured for specific dates)
+- **10 Pricing Rules** with priority-based evaluation:
+  - **Time-based**: Peak Hours (6PM-9PM, +30%), Off-Peak (6AM-10AM, -20%)
+  - **Day-based**: Weekend Special (Sat-Sun, +25%)
+  - **Court-type**: Outdoor Premium (outdoor courts, +20%)
+  - **Seasonal**: Summer Season (Jun-Aug, -15%)
+  - **Festival**: Christmas Special (Dec 25, -40%), New Year Sale (Jan 1, -50%), Diwali Special (inactive, -30%)
+  - **Specific-date**: Grand Opening Day (specific date, -60%)
+  - **Custom**: Flexible conditions with custom logic
 
 - **2 Users**: 
   - **Super Admin**: `your-email-in-env` (full system access)
@@ -327,7 +336,7 @@ Run `npm run seed` in backend directory to populate database with:
    ```
 
 4. **Login Credentials**:
-   - **Super Admin**: `hpradeep706@gmail.com` (OTP: `123456` in dev mode)
+   - **Super Admin**: `your-email` (OTP: `123456` in dev mode)
    - **Demo User**: `demo@courtbooking.com` (OTP: `123456` in dev mode)
 
 ### Testing Workflow
@@ -361,12 +370,15 @@ Run `npm run seed` in backend directory to populate database with:
    - System blocks booking past times even via API
 
 5. **Admin Panel Operations**:
-   - Login as `your-email`
+   - Login as `your-email` save it in env as 'SUPER_ADMIN_EMAIL'
    - Navigate to Admin Panel
    - **Courts Tab**: Create/edit courts, freeze for maintenance
-   - **Equipment Tab**: Add equipment, set quantities and rates
-   - **Coaches Tab**: Manage coach profiles and hourly rates
-   - **Pricing Rules Tab**: Create time-based/day-based rules
+   - **Equipment Tab**: Add equipment with type (racket/net/ball), set quantities and rates
+   - **Coaches Tab**: Manage coach profiles with name, email, phone, specialization, and hourly rates
+   - **Pricing Rules Tab**: Create/edit all 7 rule types (time-based, day-based, court-type, seasonal, festival, specific-date, custom)
+     - Add festival offers (e.g., Christmas -40%, Diwali -30%)
+     - Set specific date promotions (e.g., Grand Opening Day -60%)
+     - Toggle active/inactive status, delete rules, edit conditions
    - **Bookings Tab**: View all bookings with pagination, auto-refreshes every 15s
    - **Users Tab**: View registered users with booking counts
 
@@ -401,8 +413,12 @@ court-booking-app/
 │   └── server.js        # Express app entry point
 ├── frontend/
 │   ├── src/
-│   │   ├── components/  # React components
+│   │   ├── components/  # Shared React components (Navbar, ProtectedRoute, UI library)
+│   │   ├── features/    # Feature-based modules (admin, booking) with components/hooks/utils
+│   │   │   ├── admin/   # Admin panel with modular tabs (courts, equipment, coaches, pricing, bookings, users)
+│   │   │   └── booking/ # Booking flow components
 │   │   ├── pages/       # Route-level pages
+│   │   ├── contexts/    # React Context providers (Auth, Booking)
 │   │   ├── hooks/       # Custom React hooks
 │   │   ├── services/    # API integration
 │   │   ├── lib/         # Utilities and helpers
