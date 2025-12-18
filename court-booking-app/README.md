@@ -87,6 +87,7 @@ cp .env.example .env
 Edit `.env` file with your configuration:
 
 ```env
+Frontend Directory
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/court-booking
 # Or use MongoDB Atlas: mongodb+srv://<username>:<password>@cluster.mongodb.net/court-booking
@@ -104,6 +105,19 @@ EMAIL_FROM=Court Booking <noreply@courtbooking.com>
 OTP_EXPIRE_MINUTES=10
 CLIENT_URL=http://localhost:5173
 SUPER_ADMIN_EMAIL=your-email
+
+Backend Directory
+VITE_FIREBASE_API_KEY=""
+VITE_FIREBASE_AUTH_DOMAIN=""
+VITE_FIREBASE_PROJECT_ID=""
+VITE_FIREBASE_STORAGE_BUCKET=""
+VITE_FIREBASE_MESSAGING_SENDER_ID=""
+VITE_FIREBASE_APP_ID=""
+VITE_FIREBASE_MEASUREMENT_ID=""
+
+# API URL
+VITE_API_URL=http://localhost:5000/api
+
 ```
 
 #### Setting up Gmail for SMTP:
@@ -404,7 +418,8 @@ Run `npm run seed` in backend directory to populate database with:
 court-booking-app/
 ├── backend/
 │   ├── config/           # Database configuration
-│   ├── middleware/       # Auth and validation middleware
+│   ├── middleware/        # Auth and validation middleware
+    ├── controllers/        #for routes
 │   ├── models/          # Mongoose schemas
 │   ├── routes/          # API route handlers
 │   ├── services/        # Business logic layer
