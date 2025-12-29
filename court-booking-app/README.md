@@ -49,7 +49,7 @@ A full-stack court booking system for sports facilities with multi-resource book
 - Express Validator
 
 ### Frontend
-- React 19 + TypeScript
+- React 18 + TypeScript
 - Vite
 - Shadcn UI
 - React Router
